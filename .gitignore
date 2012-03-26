@@ -1,6 +1,7 @@
 nbproject/
 build/
 dist/
+.access^
 build.xml
 *.n3
 out.txt
