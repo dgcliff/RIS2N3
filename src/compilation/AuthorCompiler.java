@@ -26,6 +26,28 @@ public class AuthorCompiler
         uniqueAuthors = new ArrayList<>();
     }
     
+    public String getAuthorURI(String authorName)
+    {
+        Author au = new Author(authorName, uniqueURIGen.generateTempURI());
+        
+        for(Author listedAuthor: uniqueAuthors)
+        {
+            if(listedAuthor.isTheSamePersonAs(au))
+            {
+                //we should always find the author - should put checking in place
+                au = listedAuthor;
+                break;
+            }
+        }        
+        
+        return au.getURI();
+    }
+    
+    public ArrayList<Author> getAllAuthors()
+    {
+        return uniqueAuthors;
+    }
+    
     public void addPublication(String title, ArrayList<String> authorList)
     {
         boolean uniqueAuthor = true;

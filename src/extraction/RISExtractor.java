@@ -1,6 +1,8 @@
 package extraction;
 
 import compilation.AuthorCompiler;
+import compilation.ConferenceCompiler;
+import compilation.JournalCompiler;
 import compilation.N3Compiler;
 import java.io.BufferedReader;
 import java.io.File;
@@ -111,9 +113,11 @@ public class RISExtractor
         return aC;
     }
 
-    public void extractToN3(String outputFile)
+    public void extractToN3(String outputFile, AuthorCompiler aC)
     {
-        N3Compiler n3c = new N3Compiler();        
+        N3Compiler n3c = new N3Compiler(uniqueURIGen);
+        JournalCompiler jC = new JournalCompiler(uniqueURIGen);
+        ConferenceCompiler cC = new ConferenceCompiler(uniqueURIGen);
         
         //for loop for each file
         for (String filename : fileList)
@@ -166,14 +170,14 @@ public class RISExtractor
                         {
                             switch (type)
                             {
-                                case "ABST": case "INPR": case "JFULL": case "JOUR": JournalArticle jt = new JournalArticle(uniqueURIGen, newEntry); n3c.addEntry(jt); break;
-                                case "CONF": ConferenceProceedings cpt = new ConferenceProceedings(uniqueURIGen, newEntry); break;
-                                case "UNPB": UnpublishedWork uwt = new UnpublishedWork(uniqueURIGen, newEntry); break;
-                                case "BOOK": Book bt = new Book(uniqueURIGen, newEntry); break;
-                                case "CHAP": BookSection bst = new BookSection(uniqueURIGen, newEntry); break;
-                                case "THES": Thesis tt = new Thesis(uniqueURIGen, newEntry); break;
-                                case "GEN": Generic gt = new Generic(uniqueURIGen, newEntry); break;
-                                case "RPRT": Report rt = new Report(uniqueURIGen, newEntry); break;
+                                case "ABST": case "INPR": case "JFULL": case "JOUR": JournalArticle jt = new JournalArticle(uniqueURIGen, newEntry, aC, jC); n3c.addEntry(jt); break;
+                                case "CONF": ConferenceProceedings cpt = new ConferenceProceedings(uniqueURIGen, newEntry, aC, cC); n3c.addEntry(cpt); break;
+                                case "UNPB": UnpublishedWork uwt = new UnpublishedWork(uniqueURIGen, newEntry, aC); break;
+                                case "BOOK": Book bt = new Book(uniqueURIGen, newEntry, aC); break;
+                                case "CHAP": BookSection bst = new BookSection(uniqueURIGen, newEntry, aC); break;
+                                case "THES": Thesis tt = new Thesis(uniqueURIGen, newEntry, aC); break;
+                                case "GEN": Generic gt = new Generic(uniqueURIGen, newEntry, aC); break;
+                                case "RPRT": Report rt = new Report(uniqueURIGen, newEntry, aC); break;
                             }
                         }                                                
                     }
@@ -187,6 +191,9 @@ public class RISExtractor
             }        
         }
         
+        n3c.addAuthors(aC);
+        n3c.addJournals(jC);
+        n3c.addConferences(cC);
         n3c.outputValues(outputFile);
     }
 }

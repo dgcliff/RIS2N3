@@ -23,4 +23,9 @@ public class UniqueURIGenerator
     {
         return "<" + BASE_URI + "a" + getUniqueNumber() + ">";
     }
+    
+    public String generateTempURI()
+    {
+        return "<" + BASE_URI + "a000>";
+    }
 }

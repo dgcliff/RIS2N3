@@ -4,6 +4,7 @@
  */
 package templates;
 
+import compilation.AuthorCompiler;
 import java.util.ArrayList;
 
 /**
@@ -12,8 +13,8 @@ import java.util.ArrayList;
  */
 public class BookSection extends BaseTemplate
 {
-    public BookSection(UniqueURIGenerator uniqueNumberGen, ArrayList<String> newEntry)
+    public BookSection(UniqueURIGenerator uniqueNumberGen, ArrayList<String> newEntry, AuthorCompiler aC)
     {
-        super(uniqueNumberGen);
+        super(uniqueNumberGen, aC);
     }    
 }

@@ -10,13 +10,13 @@ import java.util.ArrayList;
  *
  * @author dgcliff
  */
-public class Journal
+public class Conference
 {
     private ArrayList<String> articleURIList = new ArrayList<>();
     private String title;
     private String URI;
     
-    public Journal(String titleVal, String URIVal)
+    public Conference(String titleVal, String URIVal)
     {
         title = titleVal;
         URI = URIVal;
@@ -32,12 +32,12 @@ public class Journal
         return title;
     }
     
-    public void addArticle(String URI)
+    public void addPaper(String URI)
     {
         articleURIList.add(URI);
     }
     
-    public ArrayList<String> getArticleURIs()
+    public ArrayList<String> getPaperURIs()
     {
         return articleURIList;
     }

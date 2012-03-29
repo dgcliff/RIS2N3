@@ -4,6 +4,7 @@
  */
 package templates;
 
+import compilation.AuthorCompiler;
 import java.util.ArrayList;
 
 /**
@@ -12,8 +13,8 @@ import java.util.ArrayList;
  */
 public class UnpublishedWork extends BaseTemplate
 {
-    public UnpublishedWork(UniqueURIGenerator uniqueNumberGen, ArrayList<String> newEntry)
+    public UnpublishedWork(UniqueURIGenerator uniqueNumberGen, ArrayList<String> newEntry, AuthorCompiler aC)
     {
-        super(uniqueNumberGen);
+        super(uniqueNumberGen, aC);
     }    
 }

@@ -4,6 +4,7 @@
  */
 package templates;
 
+import compilation.AuthorCompiler;
 import java.util.ArrayList;
 
 /**
@@ -11,26 +12,40 @@ import java.util.ArrayList;
  * @author dgcliff
  */
 public class BaseTemplate
-{    
+{
+    private AuthorCompiler aC;
     private String URI;
     
     private ArrayList<String> n3Values = new ArrayList<>();
+    private ArrayList<String> authorURIList = new ArrayList<>();
     private UniqueURIGenerator uniqueURIGen;
     
     private boolean hasDate = false;
+    private boolean hasAuthors = false;
     private String dateURI;
     private String dateValue;
     
-    public BaseTemplate(UniqueURIGenerator uUg)
+    public BaseTemplate(UniqueURIGenerator uUg, AuthorCompiler auCo)
     {
+        aC = auCo;
         uniqueURIGen = uUg;
         URI = uniqueURIGen.generateNewURI();
         n3Values.add(URI);
     }
     
+    public String getURI()
+    {
+        return URI;
+    }
+    
     public boolean hasDate()
     {
         return hasDate;
+    }
+    
+    public boolean hasAuthors()
+    {
+        return hasAuthors;
     }
     
     public String getDateUri()
@@ -48,10 +63,16 @@ public class BaseTemplate
         n3Values.add("\ta "+ line + " ;");
     }
     
+    public void addN3(String N3Str)
+    {
+        n3Values.add(N3Str);
+    }
+    
     public void addTitle(String line)
     {
         String title = (line.substring(line.indexOf("-") + 1, line.length())).trim();
         n3Values.add("\t<http://vivoweb.org/ontology/core#title> \"" + title + "\" ;");
+        n3Values.add("\t<http://www.w3.org/2000/01/rdf-schema#label> \"" + title + "\" ;");
     }
     
     public void addKeywords(String line)
@@ -87,8 +108,14 @@ public class BaseTemplate
     
     public void addAuthor(String line)
     {
-        throw new UnsupportedOperationException("addAuthor hasn't been implemented yet");
-        //n3Values.add("\t<http://vivoweb.org/ontology/core#informationResourceInAuthorship> \"" + titleStr + "\" ;");
+        hasAuthors = true;
+        String authorName = (line.substring(line.indexOf("-") + 1, line.length())).trim();
+        authorURIList.add(aC.getAuthorURI(authorName));
+    }
+    
+    public ArrayList<String> getAuthorURIList()
+    {
+        return authorURIList;
     }
     
     public void completeEntry()
