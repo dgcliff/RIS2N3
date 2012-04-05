@@ -34,72 +34,74 @@ public class N3Compiler
         ArrayList<String> authorshipURIList = new ArrayList<>();
         ArrayList<String> authorURIList;
         
-        if(bt.hasAuthors())
+        if(!bt.hasAuthors())
         {
-            authorURIList = bt.getAuthorURIList();
-            
-            //create new authorship and link to author and article
-            for(String URI : authorURIList)
-            {
-                //create new authorship
-                String authorshipURI = uniqueURIGen.generateNewURI();
-                authorshipURIList.add(authorshipURI);
-                
-                n3Compilation.add(authorshipURI);
-                n3Compilation.add("\t a <http://vivoweb.org/ontology/core#Authorship> ;");
-                
-                //link authorship to author                
-                n3Compilation.add("\t <http://vivoweb.org/ontology/core#linkedAuthor> " + URI + " ;");
-                
-                //link authorship to article                
-                n3Compilation.add("\t <http://vivoweb.org/ontology/core#linkedInformationResource> " + bt.getURI() + " .");                
-                
-                n3Compilation.add("");
-                
-                //link author to authorship (inverse of above)
-                n3Compilation.add(URI);
-                n3Compilation.add("\t<http://vivoweb.org/ontology/core#authorInAuthorship> "+ authorshipURI + " .");
-            }                                   
-        }        
+            //Dead Entry
+            return;
+        }
         
-        n3Compilation.add("");
+        authorURIList = bt.getAuthorURIList();
+
+        //create new authorship and link to author and article
+        for(String authorURI : authorURIList)
+        {
+            //create new authorship
+            String authorshipURI = uniqueURIGen.generateNewURI();
+            authorshipURIList.add(authorshipURI);
+
+            n3Compilation.add(authorshipURI);
+            n3Compilation.add("\t a <http://vivoweb.org/ontology/core#Authorship> ;");
+
+            //link authorship to author                
+            n3Compilation.add("\t <http://vivoweb.org/ontology/core#linkedAuthor> " + authorURI + " ;");
+
+            //link authorship to article                
+            n3Compilation.add("\t <http://vivoweb.org/ontology/core#linkedInformationResource> " + bt.getURI() + " .\n");                                                
+
+            //link author to authorship (inverse of above)
+            n3Compilation.add(authorURI);
+            n3Compilation.add("\t<http://vivoweb.org/ontology/core#authorInAuthorship> "+ authorshipURI + " .\n");
+        }
         
         for(String s : newEntry)
         {
             n3Compilation.add(s);
         }        
-        
+
         n3Compilation.add("");
-        
-        if(bt.hasAuthors())
+
+        n3Compilation.add(bt.getURI());
+
+        //link article to authorships        
+        for(int i = 0; i < authorshipURIList.size(); i++)
         {
-            n3Compilation.add(bt.getURI());
-            
-            //link article to authorships
-            //for(String URI : authorshipURIList)
-            for(int i = 0; i < authorshipURIList.size(); i++)
+            if(i < (authorshipURIList.size() - 1))
             {
-                if(i < (authorshipURIList.size() - 1))
-                {
-                    n3Compilation.add("\t<http://vivoweb.org/ontology/core#informationResourceInAuthorship> " + authorshipURIList.get(i) + " ;");
-                }
-                else
-                {
-                    n3Compilation.add("\t<http://vivoweb.org/ontology/core#informationResourceInAuthorship> " + authorshipURIList.get(i) + " .");
-                }
-            }                        
+                n3Compilation.add("\t<http://vivoweb.org/ontology/core#informationResourceInAuthorship> " + authorshipURIList.get(i) + " ;");
+            }
+            else
+            {
+                n3Compilation.add("\t<http://vivoweb.org/ontology/core#informationResourceInAuthorship> " + authorshipURIList.get(i) + " .");
+            }
         }
-        
+
         n3Compilation.add("");
-        
+
         if(bt.hasDate())
         {
             //need to create new individual to match the URI
             n3Compilation.add(bt.getDateUri());
-            n3Compilation.add("\t a <http://vivoweb.org/ontology/core#DateTimeValue> ;");
-            n3Compilation.add("\t <http://vivoweb.org/ontology/core#dateTime> " + bt.getDateValue() + " .\n");
+            n3Compilation.add("\ta <http://vivoweb.org/ontology/core#DateTimeValue> ;");
+            n3Compilation.add("\t<http://vivoweb.org/ontology/core#dateTime> " + bt.getDateValue() + " .\n");
         }
-                
+
+        if(bt.hasURL())
+        {
+            //need to create new core:URLLink and associate with publication
+            n3Compilation.add(bt.getURLuri());
+            n3Compilation.add("\t<http://vivoweb.org/ontology/core#linkURI> \"" + bt.getURL() + "\" ;");
+            n3Compilation.add("\t<http://vivoweb.org/ontology/core#webpageOf> " + bt.getURI() + " .\n");
+        }
     }
     
     public void addConferences(ConferenceCompiler cC)
@@ -117,9 +119,9 @@ public class N3Compiler
             
             ArrayList<String> PaperURIs = c.getPaperURIs();
             
-            for(String URI : PaperURIs)
+            for(String paperURI : PaperURIs)
             {
-                n3Compilation.add("\t<http://purl.org/ontology/bibo/presents> " + URI + " ;");
+                n3Compilation.add("\t<http://purl.org/ontology/bibo/presents> " + paperURI + " ;");
             }
             
             n3Compilation.add("\t<http://www.w3.org/2000/01/rdf-schema#label> \"" + c.getTitle() + "\" .");                        
@@ -145,9 +147,9 @@ public class N3Compiler
             
             ArrayList<String> ArticleURIs = j.getArticleURIs();
             
-            for(String URI : ArticleURIs)
+            for(String articleURI : ArticleURIs)
             {
-                n3Compilation.add("\t<http://vivoweb.org/ontology/core#publicationVenueFor> " + URI + " ;");
+                n3Compilation.add("\t<http://vivoweb.org/ontology/core#publicationVenueFor> " + articleURI + " ;");
             }
             
             n3Compilation.add("\t<http://www.w3.org/2000/01/rdf-schema#label> \"" + j.getTitle() + "\" .");                        

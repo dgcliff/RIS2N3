@@ -6,6 +6,8 @@ package templates;
 
 import compilation.AuthorCompiler;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -22,6 +24,11 @@ public class BaseTemplate
     
     private boolean hasDate = false;
     private boolean hasAuthors = false;
+    private boolean hasURL = false;
+    
+    private String URL;
+    private String URLuri;
+    
     private String dateURI;
     private String dateValue;
     
@@ -38,6 +45,11 @@ public class BaseTemplate
         return URI;
     }
     
+    public boolean hasURL()
+    {
+        return hasURL;
+    }
+    
     public boolean hasDate()
     {
         return hasDate;
@@ -46,6 +58,16 @@ public class BaseTemplate
     public boolean hasAuthors()
     {
         return hasAuthors;
+    }
+    
+    public String getURL()
+    {
+        return URL;
+    }
+    
+    public String getURLuri()
+    {
+        return URLuri;
     }
     
     public String getDateUri()
@@ -66,6 +88,16 @@ public class BaseTemplate
     public void addN3(String N3Str)
     {
         n3Values.add(N3Str);
+    }
+    
+    public void addURL(String line)
+    {
+        hasURL = true;
+        
+        URL = (line.substring(line.indexOf("-") + 1, line.length())).trim();        
+        URLuri = uniqueURIGen.generateNewURI();
+        
+        n3Values.add("\t<http://vivoweb.org/ontology/core#webpage> " + URLuri + " ;");
     }
     
     public void addTitle(String line)
@@ -107,10 +139,17 @@ public class BaseTemplate
     }
     
     public void addAuthor(String line)
-    {
-        hasAuthors = true;
+    {        
         String authorName = (line.substring(line.indexOf("-") + 1, line.length())).trim();
-        authorURIList.add(aC.getAuthorURI(authorName));
+        
+        Pattern p = Pattern.compile(".*, .*"); //RIS author pattern
+        Matcher m = p.matcher(authorName);
+
+        if(m.matches())
+        {
+            hasAuthors = true;
+            authorURIList.add(aC.getAuthorURI(authorName));
+        }
     }
     
     public ArrayList<String> getAuthorURIList()

@@ -16,5 +16,34 @@ public class UnpublishedWork extends BaseTemplate
     public UnpublishedWork(UniqueURIGenerator uniqueNumberGen, ArrayList<String> newEntry, AuthorCompiler aC)
     {
         super(uniqueNumberGen, aC);
+        
+        addType("<http://purl.org/ontology/bibo/Document>");
+        addType("<http://vivoweb.org/ontology/core#InformationResource>");
+        
+        for(String line : newEntry)
+        {
+            if (line.startsWith("T1") || line.startsWith("TI"))
+            {
+                addTitle(line);
+            }
+            else if (line.startsWith("KW"))
+            {
+                addKeywords(line);
+            }
+            else if (line.startsWith("Y1") || line.startsWith("PY"))
+            {
+                addDate(line);
+            }
+            else if (line.startsWith("AU") || line.startsWith("A1") || line.startsWith("A2") || line.startsWith("A3") || line.startsWith("A4"))
+            {
+                addAuthor(line);
+            }   
+            else if (line.startsWith("UR"))
+            {
+                addURL(line);
+            }            
+        }
+        
+        completeEntry();
     }    
 }

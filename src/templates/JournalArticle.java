@@ -19,6 +19,7 @@ public class JournalArticle extends BaseTemplate
         super(uniqueNumberGen, aC);
         
         addType("<http://purl.org/ontology/bibo/AcademicArticle>");
+        addType("<http://vivoweb.org/ontology/core#InformationResource>");
         
         for(String line : newEntry)
         {
@@ -44,6 +45,10 @@ public class JournalArticle extends BaseTemplate
                 String journalURI = jC.addJournal(title, this.getURI());                                                
                 addN3("\t<http://vivoweb.org/ontology/core#hasPublicationVenue> " + journalURI + " ;");
             }
+            else if (line.startsWith("UR"))
+            {
+                addURL(line);
+            }            
         }                
         
         completeEntry();

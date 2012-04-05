@@ -32,6 +32,11 @@ public class Author
         relatedItems = new ArrayList<>();
         StringTokenizer st = new StringTokenizer(authorFullName, ",");
         
+        if(authorFullName.equals("Montgomery, D. R."))
+        {
+            int j = 0;
+        }
+        
         while(st.hasMoreTokens())
         {
             String tempToken = st.nextToken();
@@ -41,51 +46,62 @@ public class Author
                 setLastName(tempToken);
             }
             else
-            {
+            {                          
+                tempToken = tempToken.replace(".", " ");
                 tempToken = tempToken.trim();
-                tempToken = tempToken.replace(".", "");
-                String[] spaceSplit = tempToken.split(" ");                
-                
+                String[] spaceSplit = tempToken.split(" ");
+
+                ArrayList<String> nameValues = new ArrayList<String>();
+
+                for(final String s : spaceSplit)
+                {
+                    if(!s.equals(" ") && !s.equals(""))
+                    {
+                        nameValues.add(s);
+                    }
+                }
+
                 //do we have a middle and first?
-                if(spaceSplit.length == 1)
+                if(nameValues.size() == 1)
                 {
                     //is it an initial or full first name?
-                    if(spaceSplit[0].length() == 1)
+                    //if(spaceSplit[0].length() == 1)
+                    if(nameValues.get(0).length() == 1)
                     {
-                        setFirstInitial(spaceSplit[0]);
+                        setFirstInitial(nameValues.get(0));
                     }
                     else
                     {
-                        setFirstName(spaceSplit[0]);
+                        setFirstName(nameValues.get(0));
                     }
-                    
+
                     break;
                 }
                 else
                 {
                     //is it an initial or full first name?
-                    if(spaceSplit[0].length() == 1)
+                    if(nameValues.get(0).length() == 1)
                     {
-                        setFirstInitial(spaceSplit[0]);
+                        setFirstInitial(nameValues.get(0));
                     }
                     else
                     {
-                        setFirstName(spaceSplit[0]);
+                        setFirstName(nameValues.get(0));
                     }
-                    
+
                     //is it an initial or full middle name?
-                    if(spaceSplit[1].length() == 1)
+                    if(nameValues.get(1).length() == 1)
                     {
-                        setMiddleInitial(spaceSplit[1]);
+                        setMiddleInitial(nameValues.get(1));
                     }
                     else
                     {
-                        setMiddleName(spaceSplit[1]);
+                        setMiddleName(nameValues.get(1));
                     }
-                    
+
                     break;
                 }
-            }                        
+            }
         }
         
         compileFullName();

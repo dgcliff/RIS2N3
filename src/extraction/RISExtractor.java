@@ -8,6 +8,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import templates.*;
 
 /*
@@ -51,7 +53,7 @@ public class RISExtractor
 
                 String topLine = reader.readLine();               
                 
-                boolean completeEntry = false;
+                boolean completeEntry = false;                
                 
                 //inner loop for for file, go through line by line
                 while (topLine != null)
@@ -64,8 +66,10 @@ public class RISExtractor
                         
                         String line = reader.readLine();
                         
+                        boolean hasAuthors = false;
+                        
                         while (line != null)
-                        {
+                        {                            
                             if (line.startsWith("TY")) //improperly ended entry, should've encountered ER before now
                             {
                                 line = null;
@@ -87,18 +91,29 @@ public class RISExtractor
                                 if (line.startsWith("AU") || line.startsWith("A1") || line.startsWith("A2") || line.startsWith("A3") || line.startsWith("A4"))
                                 {
                                     String author = (line.substring(line.indexOf("-") + 1, line.length())).trim();
-                                    authorList.add(author);
+                                    
+                                    Pattern p = Pattern.compile(".*, .*"); //RIS author pattern
+                                    Matcher m = p.matcher(author);
+                                    
+                                    if(m.matches())
+                                    {
+                                        hasAuthors = true;
+                                        authorList.add(author);
+                                    }                                                                                                            
                                 }
-                                
-                                
+                                                                
                                 line = reader.readLine();
                             }                                                        
                         }
                         
-                        if(completeEntry)
+                        if(completeEntry && hasAuthors && !title.equals(""))
                         {
                             aC.addPublication(title, authorList);
-                        }                                                
+                        }
+                        else
+                        {
+                            System.out.println("Dead entry - " + title);
+                        }
                     }
                     
                     topLine = reader.readLine();
@@ -172,12 +187,12 @@ public class RISExtractor
                             {
                                 case "ABST": case "INPR": case "JFULL": case "JOUR": JournalArticle jt = new JournalArticle(uniqueURIGen, newEntry, aC, jC); n3c.addEntry(jt); break;
                                 case "CONF": ConferenceProceedings cpt = new ConferenceProceedings(uniqueURIGen, newEntry, aC, cC); n3c.addEntry(cpt); break;
-                                case "UNPB": UnpublishedWork uwt = new UnpublishedWork(uniqueURIGen, newEntry, aC); break;
-                                case "BOOK": Book bt = new Book(uniqueURIGen, newEntry, aC); break;
-                                case "CHAP": BookSection bst = new BookSection(uniqueURIGen, newEntry, aC); break;
-                                case "THES": Thesis tt = new Thesis(uniqueURIGen, newEntry, aC); break;
-                                case "GEN": Generic gt = new Generic(uniqueURIGen, newEntry, aC); break;
-                                case "RPRT": Report rt = new Report(uniqueURIGen, newEntry, aC); break;
+                                case "UNPB": UnpublishedWork uwt = new UnpublishedWork(uniqueURIGen, newEntry, aC); n3c.addEntry(uwt); break;
+                                case "BOOK": Book bt = new Book(uniqueURIGen, newEntry, aC); n3c.addEntry(bt); break;
+                                case "CHAP": BookSection bst = new BookSection(uniqueURIGen, newEntry, aC); n3c.addEntry(bst); break;
+                                case "THES": Thesis tt = new Thesis(uniqueURIGen, newEntry, aC); n3c.addEntry(tt); break;
+                                case "GEN": Generic gt = new Generic(uniqueURIGen, newEntry, aC); n3c.addEntry(gt); break;
+                                case "RPRT": Report rt = new Report(uniqueURIGen, newEntry, aC); n3c.addEntry(rt); break;
                             }
                         }                                                
                     }

@@ -10,7 +10,7 @@ package templates;
  */
 public class UniqueURIGenerator
 {
-    private static String BASE_URI = "http://vivo-trunk.indiana.edu/individual/";
+    private static String BASE_URI = "http://vivo-vis-test.slis.indiana.edu/vivo/individual/";
     private int num = 1000;
     
     private int getUniqueNumber()
