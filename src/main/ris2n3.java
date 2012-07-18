@@ -26,9 +26,10 @@ public class ris2n3
         UniqueURIGenerator uUg = new UniqueURIGenerator();
         RISExtractor risEx = new RISExtractor(dir, uUg);
         
-        AuthorCompiler aC = risEx.extractAuthorNames(true);        
+        AuthorCompiler aC = risEx.extractAuthorNames(true);
+        aC.outputNamesN3("foaf-names.n3");
         //aC.printAuthorListToFile(args[1]);
         
-        risEx.extractToN3(args[1], aC);
+        //risEx.extractToN3(args[1], aC);
     }
 }

@@ -30,12 +30,7 @@ public class Author
         URI = URIstr;
         
         relatedItems = new ArrayList<>();
-        StringTokenizer st = new StringTokenizer(authorFullName, ",");
-        
-        if(authorFullName.equals("Montgomery, D. R."))
-        {
-            int j = 0;
-        }
+        StringTokenizer st = new StringTokenizer(authorFullName, ",");        
         
         while(st.hasMoreTokens())
         {
@@ -51,7 +46,7 @@ public class Author
                 tempToken = tempToken.trim();
                 String[] spaceSplit = tempToken.split(" ");
 
-                ArrayList<String> nameValues = new ArrayList<String>();
+                ArrayList<String> nameValues = new ArrayList<>();
 
                 for(final String s : spaceSplit)
                 {
@@ -193,22 +188,22 @@ public class Author
     
     //--------------------------------------------------------------------------
     
-    private String getFirstName()
-    {
+    public String getFirstName()
+    {        
         return firstName;
     }
     
-    private String getMiddleName()
+    public String getMiddleName()
     {
         return middleName;       
     }    
     
-    private String getLastName()
+    public String getLastName()
     {
         return lastName;
     }
     
-    private String getFirstInitial()
+    public String getFirstInitial()
     {
         return firstInitial;
     }

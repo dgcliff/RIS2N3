@@ -116,5 +116,31 @@ public class AuthorCompiler
         {
             System.out.println(e);
         }
-    }    
+    }
+    
+    public void outputNamesN3(String filename)
+    {
+        try (PrintWriter out = new PrintWriter(new FileWriter(filename)))
+        {
+            for(Author au : uniqueAuthors)
+            {
+                out.println(au.getURI());
+                
+                String givenName = au.getFirstName();
+                
+                if(givenName.equals(""))
+                {
+                    givenName = au.getFirstInitial();
+                }
+                
+                out.println("\t<http://xmlns.com/foaf/0.1/firstName> \"" + givenName + "\" ;");
+                
+                out.println("\t<http://xmlns.com/foaf/0.1/lastName> \"" + au.getLastName() + "\" .\n");
+            }
+        }
+        catch(IOException e)
+        {
+            System.out.println(e);
+        }
+    }
 }
