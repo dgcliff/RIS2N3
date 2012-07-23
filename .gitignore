@@ -6,3 +6,4 @@ build.xml
 *.n3
 out.txt
 rawAuthorList.txt
+ris/*

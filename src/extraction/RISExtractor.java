@@ -186,13 +186,14 @@ public class RISExtractor
                             switch (type)
                             {
                                 case "ABST": case "INPR": case "JFULL": case "JOUR": JournalArticle jt = new JournalArticle(uniqueURIGen, newEntry, aC, jC); n3c.addEntry(jt); break;
-                                case "CONF": ConferenceProceedings cpt = new ConferenceProceedings(uniqueURIGen, newEntry, aC, cC); n3c.addEntry(cpt); break;
-                                case "UNPB": UnpublishedWork uwt = new UnpublishedWork(uniqueURIGen, newEntry, aC); n3c.addEntry(uwt); break;
-                                case "BOOK": Book bt = new Book(uniqueURIGen, newEntry, aC); n3c.addEntry(bt); break;
-                                case "CHAP": BookSection bst = new BookSection(uniqueURIGen, newEntry, aC); n3c.addEntry(bst); break;
-                                case "THES": Thesis tt = new Thesis(uniqueURIGen, newEntry, aC); n3c.addEntry(tt); break;
-                                case "GEN": Generic gt = new Generic(uniqueURIGen, newEntry, aC); n3c.addEntry(gt); break;
-                                case "RPRT": Report rt = new Report(uniqueURIGen, newEntry, aC); n3c.addEntry(rt); break;
+                                case "THES": case "DISS": Thesis tt = new Thesis(uniqueURIGen, newEntry, aC); n3c.addEntry(tt); break;
+                                case "CONF":    ConferenceProceedings cpt = new ConferenceProceedings(uniqueURIGen, newEntry, aC, cC); n3c.addEntry(cpt); break;
+                                case "UNPB":    UnpublishedWork uwt = new UnpublishedWork(uniqueURIGen, newEntry, aC); n3c.addEntry(uwt); break;
+                                case "BOOK":    Book bt = new Book(uniqueURIGen, newEntry, aC); n3c.addEntry(bt); break;
+                                case "CHAP":    BookSection bst = new BookSection(uniqueURIGen, newEntry, aC); n3c.addEntry(bst); break;                                
+                                case "GEN":     Generic gt = new Generic(uniqueURIGen, newEntry, aC); n3c.addEntry(gt); break;
+                                case "RPRT":    Report rt = new Report(uniqueURIGen, newEntry, aC); n3c.addEntry(rt); break;
+                                default:        System.out.println("Missing classfication! - " + type); break;
                             }
                         }                                                
                     }
