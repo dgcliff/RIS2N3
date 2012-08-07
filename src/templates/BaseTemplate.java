@@ -5,9 +5,8 @@
 package templates;
 
 import compilation.AuthorCompiler;
+import entity.Author;
 import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  *
@@ -15,7 +14,6 @@ import java.util.regex.Pattern;
  */
 public class BaseTemplate
 {
-    private AuthorCompiler aC;
     private String URI;
     
     private ArrayList<String> n3Values = new ArrayList<>();
@@ -32,11 +30,10 @@ public class BaseTemplate
     private String dateURI;
     private String dateValue;
     
-    public BaseTemplate(UniqueURIGenerator uUg, AuthorCompiler auCo)
+    public BaseTemplate(UniqueURIGenerator uUg, String URIVal)
     {
-        aC = auCo;
         uniqueURIGen = uUg;
-        URI = uniqueURIGen.generateNewURI();
+        URI = URIVal;
         n3Values.add(URI);
     }
     
@@ -138,18 +135,10 @@ public class BaseTemplate
         n3Values.add("\t<http://vivoweb.org/ontology/core#dateTimeValue> " + dateURI + " ;");
     }
     
-    public void addAuthor(String line)
-    {        
-        String authorName = (line.substring(line.indexOf("-") + 1, line.length())).trim();
-        
-        Pattern p = Pattern.compile(".*, .*"); //RIS author pattern
-        Matcher m = p.matcher(authorName);
-
-        if(m.matches())
-        {
-            hasAuthors = true;
-            authorURIList.add(aC.getAuthorURI(authorName));
-        }
+    public void addAuthor(Author au)
+    {
+        authorURIList.add(au.getURI());
+        hasAuthors = true;
     }
     
     public ArrayList<String> getAuthorURIList()

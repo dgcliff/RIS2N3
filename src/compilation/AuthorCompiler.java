@@ -5,6 +5,7 @@
 package compilation;
 
 import entity.Author;
+import entity.Publication;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -47,8 +48,11 @@ public class AuthorCompiler
         return uniqueAuthors;
     }
     
-    public void addPublication(String title, ArrayList<String> authorList)
-    {                
+    public void addPublication(String title, ArrayList<String> authorList, Publication p, ArrayList<String> rPe)
+    {        
+        p.setTitle(title);
+        p.setRawPublicationEntry(rPe);
+        
         for(String authorName : authorList)
         {
             boolean uniqueAuthor = true;
@@ -74,9 +78,11 @@ public class AuthorCompiler
                 uniqueAuthors.add(au);
             }
             
+            p.addAuthor(au);
+            
             //is the publication already added for this author?
             boolean uniqueEntry = true;
-            ArrayList<String> authorsPublications = au.getRelatedItems();
+            ArrayList<String> authorsPublications = au.getRelatedItems();            
             
             for(String enteredTitle : authorsPublications)
             {
@@ -91,6 +97,7 @@ public class AuthorCompiler
                 au.addRelatedItem(title);
             }
         }
+                
     }
     
     public void printAuthorListToFile(String filename)

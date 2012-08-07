@@ -23,13 +23,11 @@ public class ris2n3
     public static void main(String[] args)
     {
         File dir = new File(args[0]);
-        UniqueURIGenerator uUg = new UniqueURIGenerator();
-        RISExtractor risEx = new RISExtractor(dir, uUg);
         
-        AuthorCompiler aC = risEx.extractAuthorNames(true);
-        //aC.outputNamesN3("foaf-names.n3");
-        //aC.printAuthorListToFile(args[1]);
+        RISExtractor risEx = new RISExtractor(dir);
+                
+        risEx.extractAuthorNames();        
         
-        risEx.extractToN3(args[1], aC);
+        risEx.extractToN3(args[1]);
     }
 }

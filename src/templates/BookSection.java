@@ -5,6 +5,8 @@
 package templates;
 
 import compilation.AuthorCompiler;
+import entity.Author;
+import entity.Publication;
 import java.util.ArrayList;
 
 /**
@@ -13,27 +15,26 @@ import java.util.ArrayList;
  */
 public class BookSection extends BaseTemplate
 {
-    public BookSection(UniqueURIGenerator uniqueNumberGen, ArrayList<String> newEntry, AuthorCompiler aC)
+    public BookSection(UniqueURIGenerator uniqueNumberGen, ArrayList<String> newEntry, AuthorCompiler aC, Publication pub)
     {
-        super(uniqueNumberGen, aC);
+        super(uniqueNumberGen, pub.getURI());
         
         addType("<http://purl.org/ontology/bibo/Chapter>");
         addType("<http://vivoweb.org/ontology/core#InformationResource>");
         
+        addTitle(pub.getTitle());
+        
+        for(Author a : pub.getAuthors())
+        {
+            addAuthor(a);
+        }        
+        
         for(String line : newEntry)
         {
-            if (line.startsWith("T1") || line.startsWith("TI"))
-            {
-                addTitle(line);
-            }
-            else if (line.startsWith("Y1") || line.startsWith("PY"))
+            if (line.startsWith("Y1") || line.startsWith("PY"))
             {
                 addDate(line);
-            }
-            else if (line.startsWith("AU") || line.startsWith("A1") || line.startsWith("A2") || line.startsWith("A3") || line.startsWith("A4"))
-            {
-                addAuthor(line);
-            }   
+            }               
         }        
         
         completeEntry();

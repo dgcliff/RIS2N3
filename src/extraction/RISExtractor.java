@@ -1,9 +1,7 @@
 package extraction;
 
-import compilation.AuthorCompiler;
-import compilation.ConferenceCompiler;
-import compilation.JournalCompiler;
-import compilation.N3Compiler;
+import compilation.*;
+import entity.Publication;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -22,12 +20,13 @@ import templates.*;
  */
 public class RISExtractor
 {
-    UniqueURIGenerator uniqueURIGen;
+    UniqueURIGenerator uniqueURIGen = new UniqueURIGenerator();
     ArrayList<String> fileList = new ArrayList<>();
+    AuthorCompiler aC = new AuthorCompiler(uniqueURIGen);
+    PublicationCompiler pC = new PublicationCompiler(uniqueURIGen);
 
-    public RISExtractor(File dir, UniqueURIGenerator uUg)
+    public RISExtractor(File dir)
     {
-        uniqueURIGen = uUg;
         
         if (dir.isDirectory())
         {
@@ -38,11 +37,14 @@ public class RISExtractor
             }
         }
     }
-
-    public AuthorCompiler extractAuthorNames(boolean totalList)
+    
+    public PublicationCompiler getPublicationCompiler()
     {
-        AuthorCompiler aC = new AuthorCompiler(uniqueURIGen);
+        return pC;
+    }
 
+    public void extractAuthorNames()
+    {
         //for loop for each file
         for (String filename : fileList)
         {            
@@ -50,26 +52,31 @@ public class RISExtractor
             {
                 FileReader input = new FileReader(filename);
                 BufferedReader reader = new BufferedReader(input);
-
-                String topLine = reader.readLine();               
                 
-                boolean completeEntry = false;                
+                String topLine = reader.readLine();
+                
+                boolean completeEntry = false;
                 
                 //inner loop for for file, go through line by line
                 while (topLine != null)
                 {                    
                     //extract type
                     if (topLine.startsWith("TY"))
-                    {                        
+                    {
+                        ArrayList<String> rawPublicationEntry = new ArrayList<>();
+                        rawPublicationEntry.add(topLine);
+                        
                         String title = "";
-                        ArrayList<String> authorList = new ArrayList<>();                        
+                        ArrayList<String> authorList = new ArrayList<>();
                         
                         String line = reader.readLine();
                         
                         boolean hasAuthors = false;
                         
                         while (line != null)
-                        {                            
+                        {
+                            rawPublicationEntry.add(line);
+                            
                             if (line.startsWith("TY")) //improperly ended entry, should've encountered ER before now
                             {
                                 line = null;
@@ -108,7 +115,17 @@ public class RISExtractor
                         
                         if(completeEntry && hasAuthors && !title.equals(""))
                         {
-                            aC.addPublication(title, authorList);
+                            //is the title unique?
+                            if(pC.isTitleUnique(title))
+                            {
+                                Publication p = new Publication();
+                                aC.addPublication(title, authorList, p, rawPublicationEntry);
+                                pC.addPublication(p);
+                            }
+                            else
+                            {
+                                aC.addPublication(title, authorList, pC.getPublication(title), rawPublicationEntry);
+                            }
                         }
                         else
                         {
@@ -124,82 +141,36 @@ public class RISExtractor
                 System.out.println(e);
             }        
         }
-
-        return aC;
     }
-
-    public void extractToN3(String outputFile, AuthorCompiler aC)
+    
+    public void extractToN3(String outputFile)
     {
         N3Compiler n3c = new N3Compiler(uniqueURIGen);
         JournalCompiler jC = new JournalCompiler(uniqueURIGen);
         ConferenceCompiler cC = new ConferenceCompiler(uniqueURIGen);
         
-        //for loop for each file
-        for (String filename : fileList)
-        {            
+        ArrayList<Publication> publicationList = pC.getPublicationList();
+        
+        for (Publication p : publicationList)
+        {
+            ArrayList<String> newEntry = p.getRawPublicationEntry();
+            String topLine = newEntry.get(0);
+            String type = (topLine.substring(topLine.indexOf("-") + 1, topLine.length())).trim();
+            
             try
             {
-                FileReader input = new FileReader(filename);
-                BufferedReader reader = new BufferedReader(input);
-
-                String topLine = reader.readLine();               
-                
-                boolean completeEntry = false;
-                
-                //inner loop for for file, go through line by line
-                while (topLine != null)
+                switch (type)
                 {
-                    ArrayList<String> newEntry = new ArrayList<>();
-                    
-                    //extract type
-                    if (topLine.startsWith("TY"))
-                    {
-                        newEntry.add(topLine);
-                                
-                        String type = (topLine.substring(topLine.indexOf("-") + 1, topLine.length())).trim();
-                        
-                        String line = reader.readLine();
-                        
-                        while (line != null)
-                        {
-                            if (line.startsWith("TY")) //improperly ended entry, should've encountered ER before now
-                            {
-                                line = null;
-                                break;
-                            }
-                            else if (line.startsWith("ER"))
-                            {
-                                completeEntry = true;
-                                newEntry.add(line);
-                                line = null;
-                                break;
-                            }
-                            else
-                            {
-                                newEntry.add(line);
-                                line = reader.readLine();
-                            }                                                        
-                        }
-                        
-                        if(completeEntry)
-                        {
-                            switch (type)
-                            {
-                                case "ABST": case "INPR": case "JFULL": case "JOUR": JournalArticle jt = new JournalArticle(uniqueURIGen, newEntry, aC, jC); n3c.addEntry(jt); break;
-                                case "THES": case "DISS": Thesis tt = new Thesis(uniqueURIGen, newEntry, aC); n3c.addEntry(tt); break;
-                                case "CONF":    ConferenceProceedings cpt = new ConferenceProceedings(uniqueURIGen, newEntry, aC, cC); n3c.addEntry(cpt); break;
-                                case "UNPB":    UnpublishedWork uwt = new UnpublishedWork(uniqueURIGen, newEntry, aC); n3c.addEntry(uwt); break;
-                                case "BOOK":    Book bt = new Book(uniqueURIGen, newEntry, aC); n3c.addEntry(bt); break;
-                                case "CHAP":    BookSection bst = new BookSection(uniqueURIGen, newEntry, aC); n3c.addEntry(bst); break;                                
-                                case "GEN":     Generic gt = new Generic(uniqueURIGen, newEntry, aC); n3c.addEntry(gt); break;
-                                case "RPRT":    Report rt = new Report(uniqueURIGen, newEntry, aC); n3c.addEntry(rt); break;
-                                default:        System.out.println("Missing classfication! - " + type); break;
-                            }
-                        }                                                
-                    }
-                    
-                    topLine = reader.readLine();
-                }
+                    case "ABST": case "INPR": case "JFULL": case "JOUR": JournalArticle jt = new JournalArticle(uniqueURIGen, newEntry, jC, p); n3c.addEntry(jt); break;
+                    case "THES": case "DISS": Thesis tt = new Thesis(uniqueURIGen, newEntry, aC, p); n3c.addEntry(tt); break;
+                    case "CONF":    ConferenceProceedings cpt = new ConferenceProceedings(uniqueURIGen, newEntry, aC, cC, p); n3c.addEntry(cpt); break;
+                    case "UNPB":    UnpublishedWork uwt = new UnpublishedWork(uniqueURIGen, newEntry, aC, p); n3c.addEntry(uwt); break;
+                    case "BOOK":    Book bt = new Book(uniqueURIGen, newEntry, aC, p); n3c.addEntry(bt); break;
+                    case "CHAP":    BookSection bst = new BookSection(uniqueURIGen, newEntry, aC, p); n3c.addEntry(bst); break;                                
+                    case "GEN":     Generic gt = new Generic(uniqueURIGen, newEntry, aC, p); n3c.addEntry(gt); break;
+                    case "RPRT":    Report rt = new Report(uniqueURIGen, newEntry, aC, p); n3c.addEntry(rt); break;
+                    default:        System.out.println("Missing classfication! - " + type); break;
+                }                                                                                            
             }
             catch (Exception e)
             {

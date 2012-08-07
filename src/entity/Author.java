@@ -41,18 +41,32 @@ public class Author
                 setLastName(tempToken);
             }
             else
-            {                          
-                tempToken = tempToken.replace(".", " ");
-                tempToken = tempToken.trim();
-                String[] spaceSplit = tempToken.split(" ");
-
+            {
                 ArrayList<String> nameValues = new ArrayList<>();
-
-                for(final String s : spaceSplit)
+                
+                //Robert Light has provided RIS files where the two initials
+                //have no period seperating them. New step to identify when this
+                //happens, and split them
+                
+                tempToken = tempToken.trim();
+                
+                if(tempToken.length() == 2 && !tempToken.contains(".") && Character.isUpperCase(tempToken.charAt(0)) && Character.isUpperCase(tempToken.charAt(1)))
                 {
-                    if(!s.equals(" ") && !s.equals(""))
+                    nameValues.add(Character.toString(tempToken.charAt(0)));
+                    nameValues.add(Character.toString(tempToken.charAt(1)));
+                }
+                else
+                {
+                    tempToken = tempToken.replace(".", " ");
+                    tempToken = tempToken.trim();
+                    String[] spaceSplit = tempToken.split(" ");                
+
+                    for(final String s : spaceSplit)
                     {
-                        nameValues.add(s);
+                        if(!s.equals(" ") && !s.equals(""))
+                        {
+                            nameValues.add(s);
+                        }
                     }
                 }
 
@@ -134,7 +148,7 @@ public class Author
         else
         {
             //else add first initial
-            fullName = fullName + ", " + firstInitial + ". ";
+            fullName = fullName + ", " + firstInitial + ".";
         }
         
         //if we have a full middle name add it

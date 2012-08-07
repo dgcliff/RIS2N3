@@ -6,6 +6,8 @@ package templates;
 
 import compilation.AuthorCompiler;
 import compilation.ConferenceCompiler;
+import entity.Author;
+import entity.Publication;
 import java.util.ArrayList;
 
 /**
@@ -14,33 +16,32 @@ import java.util.ArrayList;
  */
 public class ConferenceProceedings extends BaseTemplate
 {
-    public ConferenceProceedings(UniqueURIGenerator uniqueNumberGen, ArrayList<String> newEntry, AuthorCompiler aC, ConferenceCompiler cC)
+    public ConferenceProceedings(UniqueURIGenerator uniqueNumberGen, ArrayList<String> newEntry, AuthorCompiler aC, ConferenceCompiler cC, Publication pub)
     {
-        super(uniqueNumberGen, aC);
+        super(uniqueNumberGen, pub.getURI());
         
         addType("<http://vivoweb.org/ontology/core#ConferencePaper>");
         addType("<http://purl.org/ontology/bibo/Article>");                    
         addType("<http://purl.org/ontology/bibo/Document>");
-        addType("<http://vivoweb.org/ontology/core#InformationResource>");        
+        addType("<http://vivoweb.org/ontology/core#InformationResource>");
+        
+        addTitle(pub.getTitle());
+        
+        for(Author a : pub.getAuthors())
+        {
+            addAuthor(a);
+        }        
         
         for(String line : newEntry)
         {
-            if (line.startsWith("T1") || line.startsWith("TI"))
-            {
-                addTitle(line);
-            }
-            else if (line.startsWith("KW"))
+            if (line.startsWith("KW"))
             {
                 addKeywords(line);
             }
             else if (line.startsWith("Y1") || line.startsWith("PY"))
             {
                 addDate(line);
-            }
-            else if (line.startsWith("AU") || line.startsWith("A1") || line.startsWith("A2") || line.startsWith("A3") || line.startsWith("A4"))
-            {
-                addAuthor(line);
-            }     
+            }                 
             else if (line.startsWith("JF"))
             {
                 String title = (line.substring(line.indexOf("-") + 1, line.length())).trim();
