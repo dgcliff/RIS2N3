@@ -1,8 +1,7 @@
-What does the RIS2N3 tool do?
-================================
-  
-  
-  
+What does the RIS2N3 tool do?  
+================================  
+
+    
 Creating the Publication and Author objects
 -------------------------
 
@@ -35,33 +34,24 @@ This way, by the time the tool has processed all available information, there is
 
 There is still a possibility of conflated author names with this process, but given the information provided is the best case scenario (preventing as much manual intervention as possible).
   
-  
-  
 RIS Type matching
 -------------------------
 
 
 When the tool created the Publication objects, it attached the raw RIS data as an attribute. After the Publication and Author objects have been compiled, the Publication objects are then iterated over, matching the RIS data to its respective type (JOUR, BOOK etc.) The tool has a series of templates to allow for the variations in style that each type has in its RIS format.
   
-  
-  
 Creating the raw N3
 -------------------------
 
-
 After the tool has matched the RIS to its type, the raw N3 is created. This is done by creating Strings containing the relevant basic URIs and definitions relating to the information contained in the RIS entry.
 
-
-
 After all the Publication objects have been iterated over, the tool now has a long list of N3 raw strings that VIVO can ingest.
-  
   
   
 Linking entities
 -------------------------
 
-
-Before the tool ingests the N3 via the Jena library, it creates relationships via the various entities that it has created. For example, a Journal Article has a corresponding Journal. At this stage, the tool loops through these types of objects (Journals -> Journal Articles, Conferences -> Papers etc.) and creates the N3 to define their relationship.
+Before the tool ingests the N3 via the Jena library, it creates relationships via the various entities that it has created. For example, a Journal Article has a corresponding Journal. At this stage, the tool loops through these types of objects (Journals -> Journal Articles, Conferences -> Papers etc.) and creates the N3 to define their relationship.  
 
 Finally, we create the raw N3 that defines the Authors. Up until this point, the tool has just been using their URI – this gives meaning to what that URI represents, and links them to their Publications.
   
