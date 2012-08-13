@@ -1,6 +1,10 @@
 What does the RIS2N3 tool do?  
 ================================  
+  
+The RIS2N3 tool is a Java terminal application that takes one to many RIS citation files and converts it into N3 for relational data.  
 
+RIS - http://en.wikipedia.org/wiki/RIS_(file_format)  
+N3 - http://en.wikipedia.org/wiki/N3_notation  
     
 Creating the Publication and Author objects
 -------------------------
