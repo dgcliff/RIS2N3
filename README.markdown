@@ -2,6 +2,7 @@ What does the RIS2N3 tool do?
 ================================
 
 
+
 Creating the Publication and Author objects
 -------------------------
 
@@ -15,6 +16,7 @@ With this Publication object, the tool now iterates over the Author values that 
 If the Author has been previously entered, and there is more information (middle initial, full middle name, full first name etc.) the tool augments that entry.
 
 With our list of Author objects which have been processed, the tool now adds them to the Publication object.
+
 
 
 
@@ -38,11 +40,13 @@ There is still a possibility of conflated author names with this process, but gi
 
 
 
+
 RIS Type matching
 -------------------------
 
 
 When the tool created the Publication objects, it attached the raw RIS data as an attribute. After the Publication and Author objects have been compiled, the Publication objects are then iterated over, matching the RIS data to its respective type (JOUR, BOOK etc.) The tool has a series of templates to allow for the variations in style that each type has in its RIS format.
+
 
 
 
@@ -58,6 +62,7 @@ After all the Publication objects have been iterated over, the tool now has a lo
 
 
 
+
 Linking entities
 -------------------------
 
@@ -67,6 +72,7 @@ Before the tool ingests the N3 via the Jena library, it creates relationships vi
 Finally, we create the raw N3 that defines the Authors. Up until this point, the tool has just been using their URI – this gives meaning to what that URI represents, and links them to their Publications.
 
  
+
 
 
 
