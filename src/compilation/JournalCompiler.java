@@ -23,6 +23,11 @@ public class JournalCompiler
         uniqueJournals = new ArrayList<>();
     }
     
+    public boolean isJournalUnique(String title)
+    {
+        return false;
+    }
+    
     public ArrayList<Journal> getAllJournals()
     {
         return uniqueJournals;

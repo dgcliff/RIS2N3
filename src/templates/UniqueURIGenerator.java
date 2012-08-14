@@ -4,6 +4,8 @@
  */
 package templates;
 
+import database.SPARQLController;
+
 /**
  *
  * @author dgcliff
@@ -12,6 +14,13 @@ public class UniqueURIGenerator
 {
     private static String BASE_URI = "http://vivo-vis-test.slis.indiana.edu/vivo/individual/";
     private int num = 1000;
+    
+    public SPARQLController sparqlController;
+    
+    public UniqueURIGenerator(SPARQLController sC)
+    {
+        sparqlController = sC;
+    }
     
     private int getUniqueNumber()
     {

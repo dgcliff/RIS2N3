@@ -1,6 +1,7 @@
 package extraction;
 
 import compilation.*;
+import database.SPARQLController;
 import entity.Publication;
 import java.io.BufferedReader;
 import java.io.File;
@@ -20,13 +21,15 @@ import templates.*;
  */
 public class RISExtractor
 {
-    UniqueURIGenerator uniqueURIGen = new UniqueURIGenerator();
+    UniqueURIGenerator uniqueURIGen;
     ArrayList<String> fileList = new ArrayList<>();
+    
     AuthorCompiler aC = new AuthorCompiler(uniqueURIGen);
     PublicationCompiler pC = new PublicationCompiler(uniqueURIGen);
-
-    public RISExtractor(File dir)
+    
+    public RISExtractor(File dir, SPARQLController sC)
     {
+        uniqueURIGen = new UniqueURIGenerator(sC);
         
         if (dir.isDirectory())
         {

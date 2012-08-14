@@ -27,6 +27,11 @@ public class AuthorCompiler
         uniqueAuthors = new ArrayList<>();
     }
     
+    public boolean isAuthorUnique(String title)
+    {
+        return false;
+    }
+    
     public String getAuthorURI(String authorName)
     {        
         Author au = new Author(authorName, uniqueURIGen.generateTempURI());

@@ -33,14 +33,31 @@ public class PublicationCompiler
                 unique = false;
                 break;
             }
-        }
+        }        
         
         return unique;
     }
     
+    public String checkVIVOforTitle(String title)
+    {
+        //Check the database
+        String query = "PREFIX core: <http://vivoweb.org/ontology/core#> SELECT ?publication WHERE { ?publication a core:InformationResource ; core:title \"" + title + "\" . }" ;
+        return uniqueURIGen.sparqlController.checkForURI(query);        
+    }
+    
     public void addPublication(Publication p)
     {
-        p.setURI(uniqueURIGen.generateNewURI());
+        String VIVOUri = checkVIVOforTitle(p.getTitle());
+        
+        if(VIVOUri != null)
+        {
+            p.setURI(VIVOUri);
+            p.setExistsInVIVO(true);
+        }
+        {
+            p.setURI(uniqueURIGen.generateNewURI());            
+        }
+        
         publicationList.add(p);
     }
     

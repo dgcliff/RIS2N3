@@ -15,11 +15,22 @@ public class Publication
     private String URI = "";
     private String title = "";
     private ArrayList<Author> authors = new ArrayList<>();
-    private ArrayList<String> rawPublicationEntry;    
+    private ArrayList<String> rawPublicationEntry;
+    private boolean existsInVIVO = false;
     
     public void setURI(String URIval)
     {
         URI = URIval;
+    }
+    
+    public void setExistsInVIVO(boolean b)
+    {
+        existsInVIVO = b;
+    }
+    
+    public boolean getExistsInVIVO(boolean b)
+    {
+        return existsInVIVO;
     }
     
     public void addAuthor(Author a)

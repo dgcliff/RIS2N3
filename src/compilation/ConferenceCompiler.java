@@ -23,6 +23,11 @@ public class ConferenceCompiler
         uniqueConferences = new ArrayList<>();
     }
     
+    public boolean isConferenceUnique(String title)
+    {
+        return false;
+    }
+    
     public ArrayList<Conference> getAllConferences()
     {
         return uniqueConferences;
