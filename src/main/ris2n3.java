@@ -28,14 +28,14 @@ public class ris2n3
         SDBDatabaseConnection sdbC = new SDBDatabaseConnection("vivouser", "vitro123", "jdbc:mysql://localhost/vivo");
         SPARQLController sparqlC = new SPARQLController(sdbC.getStore());
         
-        sparqlC.checkForURI("PREFIX core: <http://vivoweb.org/ontology/core#> SELECT ?publication WHERE { ?publication a core:InformationResource ; core:title \"Managing reservoir sediment release in dam removal projects: An approach informed by physical and numerical modelling of non‐cohesive sediment\" . }");
+        //sparqlC.checkForURI("PREFIX core: <http://vivoweb.org/ontology/core#> SELECT ?publication WHERE { ?publication a core:InformationResource ; core:title \"Managing reservoir sediment release in dam removal projects: An approach informed by physical and numerical modelling of non‐cohesive sediment\" . }");
         
-        /*File dir = new File(args[0]);
+        File dir = new File(args[0]);
         
         RISExtractor risEx = new RISExtractor(dir, sparqlC);
                 
         risEx.extractAuthorNames();        
         
-        risEx.extractToN3(args[1]);*/
+        risEx.extractToN3(args[1]);
     }
 }

@@ -39,7 +39,7 @@ public class JournalArticle extends BaseTemplate
             {
                 addDate(line);
             }
-            else if (line.startsWith("JF"))
+            else if (line.startsWith("JF") || line.startsWith("JO"))
             {
                 String title = (line.substring(line.indexOf("-") + 1, line.length())).trim();
                 String journalURI = jC.addJournal(title, this.getURI());                                                

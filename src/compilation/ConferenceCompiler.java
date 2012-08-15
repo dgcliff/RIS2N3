@@ -23,9 +23,11 @@ public class ConferenceCompiler
         uniqueConferences = new ArrayList<>();
     }
     
-    public boolean isConferenceUnique(String title)
+    public String checkVIVOforTitle(String title)
     {
-        return false;
+        //Check the database
+        String query = "PREFIX rdfs:  <http://www.w3.org/2000/01/rdf-schema#> PREFIX bibo: <http://purl.org/ontology/bibo/> SELECT ?conference WHERE { ?conference a bibo:Conference ; rdfs:label \"" + title + "\" . }" ;
+        return uniqueURIGen.sparqlController.checkForURI(query);        
     }
     
     public ArrayList<Conference> getAllConferences()
@@ -36,7 +38,9 @@ public class ConferenceCompiler
     public String addConference(String conferenceName, String paperURI)
     {
         Conference con = null;
-                
+        
+        String VIVOUri = checkVIVOforTitle(p.getTitle());
+        
         String URI = "";
         
         for(Conference c : uniqueConferences)

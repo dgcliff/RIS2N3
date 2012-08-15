@@ -23,9 +23,11 @@ public class JournalCompiler
         uniqueJournals = new ArrayList<>();
     }
     
-    public boolean isJournalUnique(String title)
+    public String checkVIVOforTitle(String title)
     {
-        return false;
+        //Check the database
+        String query = "PREFIX rdfs:  <http://www.w3.org/2000/01/rdf-schema#> PREFIX bibo: <http://purl.org/ontology/bibo/> SELECT ?journal WHERE { ?journal a bibo:Journal ; rdfs:label \"" + title + "\" . }" ;
+        return uniqueURIGen.sparqlController.checkForURI(query);        
     }
     
     public ArrayList<Journal> getAllJournals()

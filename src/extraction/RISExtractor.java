@@ -24,12 +24,14 @@ public class RISExtractor
     UniqueURIGenerator uniqueURIGen;
     ArrayList<String> fileList = new ArrayList<>();
     
-    AuthorCompiler aC = new AuthorCompiler(uniqueURIGen);
-    PublicationCompiler pC = new PublicationCompiler(uniqueURIGen);
+    AuthorCompiler aC;
+    PublicationCompiler pC;
     
     public RISExtractor(File dir, SPARQLController sC)
     {
         uniqueURIGen = new UniqueURIGenerator(sC);
+        aC = new AuthorCompiler(uniqueURIGen);
+        pC = new PublicationCompiler(uniqueURIGen);
         
         if (dir.isDirectory())
         {

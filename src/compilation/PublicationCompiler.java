@@ -57,7 +57,7 @@ public class PublicationCompiler
         {
             p.setURI(uniqueURIGen.generateNewURI());            
         }
-        
+                      
         publicationList.add(p);
     }
     
