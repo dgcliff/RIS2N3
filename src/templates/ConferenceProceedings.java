@@ -19,13 +19,16 @@ public class ConferenceProceedings extends BaseTemplate
     public ConferenceProceedings(UniqueURIGenerator uniqueNumberGen, ArrayList<String> newEntry, AuthorCompiler aC, ConferenceCompiler cC, Publication pub)
     {
         super(uniqueNumberGen, pub.getURI());
-        
-        addType("<http://vivoweb.org/ontology/core#ConferencePaper>");
-        addType("<http://purl.org/ontology/bibo/Article>");                    
-        addType("<http://purl.org/ontology/bibo/Document>");
-        addType("<http://vivoweb.org/ontology/core#InformationResource>");
-        
-        addTitle(pub.getTitle());
+
+        if(!pub.getExistsInVIVO())
+        {
+            addType("<http://vivoweb.org/ontology/core#ConferencePaper>");
+            addType("<http://purl.org/ontology/bibo/Article>");                    
+            addType("<http://purl.org/ontology/bibo/Document>");
+            addType("<http://vivoweb.org/ontology/core#InformationResource>");
+
+            addTitle(pub.getTitle());
+        }
         
         for(Author a : pub.getAuthors())
         {
@@ -44,9 +47,12 @@ public class ConferenceProceedings extends BaseTemplate
             }                 
             else if (line.startsWith("JF") || line.startsWith("JO"))
             {
-                String title = (line.substring(line.indexOf("-") + 1, line.length())).trim();
-                String conferenceURI = cC.addConference(title, this.getURI());                                                
-                addN3("\t<http://purl.org/ontology/bibo/presentedAt> " + conferenceURI + " ;");
+                if(!pub.getExistsInVIVO())
+                {                
+                    String title = (line.substring(line.indexOf("-") + 1, line.length())).trim();
+                    String conferenceURI = cC.addConference(title, this.getURI());                                                
+                    addN3("\t<http://purl.org/ontology/bibo/presentedAt> " + conferenceURI + " ;");
+                }
             }            
         }                
         

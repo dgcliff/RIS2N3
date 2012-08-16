@@ -113,9 +113,12 @@ public class N3Compiler
         {
             n3Compilation.add(c.getURI());                     
             
-            n3Compilation.add("\ta <http://www.w3.org/2002/07/owl#Thing> ;");
-            n3Compilation.add("\ta <http://purl.org/ontology/bibo/Conference> ;");
-            n3Compilation.add("\ta <http://purl.org/NET/c4dm/event.owl#Event> ;");
+            if(!c.getExistsInVIVO())
+            {
+                n3Compilation.add("\ta <http://www.w3.org/2002/07/owl#Thing> ;");
+                n3Compilation.add("\ta <http://purl.org/ontology/bibo/Conference> ;");
+                n3Compilation.add("\ta <http://purl.org/NET/c4dm/event.owl#Event> ;");
+            }
             
             ArrayList<String> PaperURIs = c.getPaperURIs();
             
@@ -136,14 +139,17 @@ public class N3Compiler
         ArrayList<Journal> listOfAllJournals = jC.getAllJournals();
         
         for(Journal j : listOfAllJournals)
-        {
+        {            
             n3Compilation.add(j.getURI());                     
             
-            n3Compilation.add("\ta <http://www.w3.org/2002/07/owl#Thing> ;");
-            n3Compilation.add("\ta <http://purl.org/ontology/bibo/Collection> ;");            
-            n3Compilation.add("\ta <http://vivoweb.org/ontology/core#InformationResource> ;");
-            n3Compilation.add("\ta <http://purl.org/ontology/bibo/Journal> ;");
-            n3Compilation.add("\ta <http://purl.org/ontology/bibo/Periodical> ;");
+            if(!j.getExistsInVIVO())
+            {
+                n3Compilation.add("\ta <http://www.w3.org/2002/07/owl#Thing> ;");
+                n3Compilation.add("\ta <http://purl.org/ontology/bibo/Collection> ;");            
+                n3Compilation.add("\ta <http://vivoweb.org/ontology/core#InformationResource> ;");
+                n3Compilation.add("\ta <http://purl.org/ontology/bibo/Journal> ;");
+                n3Compilation.add("\ta <http://purl.org/ontology/bibo/Periodical> ;");
+            }
             
             ArrayList<String> ArticleURIs = j.getArticleURIs();
             
@@ -152,7 +158,16 @@ public class N3Compiler
                 n3Compilation.add("\t<http://vivoweb.org/ontology/core#publicationVenueFor> " + articleURI + " ;");
             }
             
-            n3Compilation.add("\t<http://www.w3.org/2000/01/rdf-schema#label> \"" + j.getTitle() + "\" .");                        
+            if(j.getExistsInVIVO())
+            {
+                String finalEntry = n3Compilation.get(n3Compilation.size() - 1);
+                finalEntry = finalEntry.replace(" ;", " .");
+                n3Compilation.set(n3Compilation.size() - 1, finalEntry);
+            }
+            else
+            {
+                n3Compilation.add("\t<http://www.w3.org/2000/01/rdf-schema#label> \"" + j.getTitle() + "\" .");
+            }
             
             n3Compilation.add("");
         }        
@@ -167,14 +182,34 @@ public class N3Compiler
         {
             n3Compilation.add(au.getURI());
             
-            n3Compilation.add("\ta <http://www.w3.org/2002/07/owl#Thing> ;");
-            n3Compilation.add("\ta <http://xmlns.com/foaf/0.1/Person> ;");            
-            n3Compilation.add("\ta <http://xmlns.com/foaf/0.1/Agent> ;");
-            
-            n3Compilation.add("\t<http://www.w3.org/2000/01/rdf-schema#label> \"" + au.getFullName() + "\" .");
-            
-            n3Compilation.add("");
+            if(!au.getExistsInVIVO())
+            {
+                n3Compilation.add("\ta <http://www.w3.org/2002/07/owl#Thing> ;");
+                n3Compilation.add("\ta <http://xmlns.com/foaf/0.1/Person> ;");            
+                n3Compilation.add("\ta <http://xmlns.com/foaf/0.1/Agent> ;");
+
+                n3Compilation.add("\t<http://www.w3.org/2000/01/rdf-schema#label> \"" + au.getFullName() + "\" .");
+
+                n3Compilation.add("");
+            }
         }
+    }
+    
+    public void checkAuthors(AuthorCompiler aC)
+    {
+        //for each author check if they exist in VIVO, if they do, set the URI
+        ArrayList<Author> listOfAllAuthors = aC.getAllAuthors();
+        
+        for(Author au : listOfAllAuthors)
+        {
+            String VIVOUri = aC.checkVIVOforAuthor(au.getFullName());
+            
+            if(VIVOUri != null)
+            {
+                au.setURI(VIVOUri);
+                au.setExistsInVIVO(true);
+            }                            
+        }        
     }
     
     public void outputValues(String filename)

@@ -39,6 +39,7 @@ public class JournalCompiler
     {
         Journal jour = null;
                 
+        String VIVOUri = checkVIVOforTitle(journalName);
         String URI = "";
         
         for(Journal j : uniqueJournals)
@@ -51,10 +52,20 @@ public class JournalCompiler
             }
         }
         
+        
         if(URI.equals(""))
-        {            
-            //create new journal object
-            jour = new Journal(journalName, uniqueURIGen.generateNewURI());
+        {
+            if(VIVOUri != null)
+            {
+                //create new journal object
+                jour = new Journal(journalName, VIVOUri);
+                jour.setExistsInVIVO(true);
+            }
+            else
+            {
+                //create new journal object
+                jour = new Journal(journalName, uniqueURIGen.generateNewURI());                
+            }                    
             
             //URI = new URI
             URI = jour.getURI();

@@ -8,10 +8,7 @@ import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.sdb.SDBFactory;
 import com.hp.hpl.jena.sdb.Store;
-import com.hp.hpl.jena.sdb.store.DatasetStore;
-import com.hp.hpl.jena.sparql.core.ResultBinding;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -29,17 +26,26 @@ public class SPARQLController
         mainModel = SDBFactory.connectNamedModel(store, "http://vitro.mannlib.cornell.edu/default/vitro-kb-2");        
     }
     
-    public String checkForURI(String queryString)
+    /*public String checkForURI(String queryString)
     {        
         Query query = QueryFactory.create(queryString);
         QueryExecution qe = QueryExecutionFactory.create(query, mainModel);
-        ResultSet results = qe.execSelect(); 
+        
+        ResultSet results = null;
+        
+        try
+        {
+            results = qe.execSelect(); 
+        }
+        catch(Exception e)
+        {
+            System.out.println(e);
+        }
         
         String lineResult = null;
         
         while (results.hasNext())
-        {
-            lineResult = "";
+        {            
             QuerySolution qs = results.next();
             Iterator<?> varNames = qs.varNames();
             while (varNames.hasNext())
@@ -58,5 +64,33 @@ public class SPARQLController
         }
         
         return lineResult;
+    }*/
+    
+    public Map<String, String> queryVIVO(String queryString, String URIsub, String valSub)
+    {
+        HashMap<String, String> titles = new HashMap<>();
+        
+        Query query = QueryFactory.create(queryString);
+        QueryExecution qe = QueryExecutionFactory.create(query, mainModel);
+        
+        ResultSet results = null;
+        
+        try
+        {
+            results = qe.execSelect(); 
+        }
+        catch(Exception e)
+        {
+            System.out.println(e);
+        }
+        
+        while (results.hasNext())
+        {            
+            QuerySolution solution = results.next();
+            //titles.add((solution.getLiteral(subject)).getString());
+            titles.put((solution.getLiteral(URIsub)).getString(), (solution.getLiteral(valSub)).getString());
+        }
+        
+        return titles;
     }
 }

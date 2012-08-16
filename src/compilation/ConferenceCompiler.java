@@ -39,7 +39,7 @@ public class ConferenceCompiler
     {
         Conference con = null;
         
-        String VIVOUri = checkVIVOforTitle(p.getTitle());
+        String VIVOUri = checkVIVOforTitle(conferenceName);
         
         String URI = "";
         
@@ -54,9 +54,18 @@ public class ConferenceCompiler
         }
         
         if(URI.equals(""))
-        {            
-            //create new journal object
-            con = new Conference(conferenceName, uniqueURIGen.generateNewURI());
+        {
+            if(VIVOUri != null)
+            {
+                //create new journal object
+                con = new Conference(conferenceName, VIVOUri);
+                con.setExistsInVIVO(true);
+            }
+            else
+            {
+                //create new journal object
+                con = new Conference(conferenceName, uniqueURIGen.generateNewURI());                
+            }
             
             //URI = new URI
             URI = con.getURI();

@@ -15,12 +15,23 @@ public class Journal
     private ArrayList<String> articleURIList = new ArrayList<>();
     private String title;
     private String URI;
+    private boolean existsInVIVO = false;
     
     public Journal(String titleVal, String URIVal)
     {
         title = titleVal;
         URI = URIVal;
     }
+    
+    public void setExistsInVIVO(boolean b)
+    {
+        existsInVIVO = b;
+    }
+    
+    public boolean getExistsInVIVO()
+    {
+        return existsInVIVO;
+    }    
     
     public String getURI()
     {

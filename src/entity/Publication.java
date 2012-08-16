@@ -28,7 +28,7 @@ public class Publication
         existsInVIVO = b;
     }
     
-    public boolean getExistsInVIVO(boolean b)
+    public boolean getExistsInVIVO()
     {
         return existsInVIVO;
     }

@@ -50,6 +50,8 @@ public class RISExtractor
 
     public void extractAuthorNames()
     {
+        int i = 0;
+        
         //for loop for each file
         for (String filename : fileList)
         {            
@@ -139,6 +141,8 @@ public class RISExtractor
                     }
                     
                     topLine = reader.readLine();
+                    //System.out.printf(i + "\tlines done.\r");
+                    i++;
                 }
             }
             catch (Exception e)
@@ -155,6 +159,8 @@ public class RISExtractor
         ConferenceCompiler cC = new ConferenceCompiler(uniqueURIGen);
         
         ArrayList<Publication> publicationList = pC.getPublicationList();
+        
+        n3c.checkAuthors(aC);
         
         for (Publication p : publicationList)
         {

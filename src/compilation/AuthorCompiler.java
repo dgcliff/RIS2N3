@@ -25,11 +25,13 @@ public class AuthorCompiler
     {
         uniqueURIGen = uUg;
         uniqueAuthors = new ArrayList<>();
-    }
+    }    
     
-    public boolean isAuthorUnique(String title)
+    public String checkVIVOforAuthor(String fullName)
     {
-        return false;
+        //Check the database
+        String query = "PREFIX rdfs:  <http://www.w3.org/2000/01/rdf-schema#> PREFIX foaf: <http://xmlns.com/foaf/0.1/> SELECT ?author WHERE { ?author a foaf:Person ; rdfs:label \"" + fullName + "\" . }" ;
+        return uniqueURIGen.sparqlController.checkForURI(query);        
     }
     
     public String getAuthorURI(String authorName)

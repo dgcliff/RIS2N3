@@ -25,6 +25,8 @@ public class Author
     
     private String fullName;
     
+    private boolean existsInVIVO = false;
+    
     public Author(String authorFullName, String URIstr)
     {
         URI = URIstr;
@@ -116,10 +118,25 @@ public class Author
         compileFullName();
     }
     
+    public void setExistsInVIVO(boolean b)
+    {
+        existsInVIVO = b;
+    }
+    
+    public boolean getExistsInVIVO()
+    {
+        return existsInVIVO;
+    }    
+    
     public String getURI()
     {
         return URI;
     }
+    
+    public void setURI(String URIVal)
+    {
+        URI = URIVal;
+    }    
     
     public String getFullName()
     {        

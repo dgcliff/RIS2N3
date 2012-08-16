@@ -19,10 +19,13 @@ public class JournalArticle extends BaseTemplate
     {
         super(uniqueNumberGen, pub.getURI());
         
-        addType("<http://purl.org/ontology/bibo/AcademicArticle>");
-        addType("<http://vivoweb.org/ontology/core#InformationResource>");
-        
-        addTitle(pub.getTitle());
+        if(!pub.getExistsInVIVO())
+        {
+            addType("<http://purl.org/ontology/bibo/AcademicArticle>");
+            addType("<http://vivoweb.org/ontology/core#InformationResource>");
+
+            addTitle(pub.getTitle());
+        }
         
         for(Author a : pub.getAuthors())
         {
@@ -41,9 +44,12 @@ public class JournalArticle extends BaseTemplate
             }
             else if (line.startsWith("JF") || line.startsWith("JO"))
             {
-                String title = (line.substring(line.indexOf("-") + 1, line.length())).trim();
-                String journalURI = jC.addJournal(title, this.getURI());                                                
-                addN3("\t<http://vivoweb.org/ontology/core#hasPublicationVenue> " + journalURI + " ;");
+                if(!pub.getExistsInVIVO())
+                {
+                    String title = (line.substring(line.indexOf("-") + 1, line.length())).trim();
+                    String journalURI = jC.addJournal(title, this.getURI());                                                
+                    addN3("\t<http://vivoweb.org/ontology/core#hasPublicationVenue> " + journalURI + " ;");
+                }
             }
             else if (line.startsWith("UR"))
             {

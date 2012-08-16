@@ -19,10 +19,13 @@ public class Book extends BaseTemplate
     {
         super(uniqueNumberGen, pub.getURI());
         
-        addType("<http://purl.org/ontology/bibo/Book>");
-        addType("<http://vivoweb.org/ontology/core#InformationResource>");
-        
-        addTitle(pub.getTitle());
+        if(!pub.getExistsInVIVO())
+        {        
+            addType("<http://purl.org/ontology/bibo/Book>");
+            addType("<http://vivoweb.org/ontology/core#InformationResource>");
+
+            addTitle(pub.getTitle());
+        }
         
         for(Author a : pub.getAuthors())
         {
