@@ -10,6 +10,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import templates.UniqueURIGenerator;
 
 /**
@@ -20,18 +23,35 @@ public class AuthorCompiler
 {
     UniqueURIGenerator uniqueURIGen;
     private ArrayList<Author> uniqueAuthors;
+    Map<String, String> VIVOpublicationList = new HashMap<>();
     
     public AuthorCompiler(UniqueURIGenerator uUg)
     {
         uniqueURIGen = uUg;
         uniqueAuthors = new ArrayList<>();
+        
+        //Check the database
+        String query = "PREFIX rdfs:  <http://www.w3.org/2000/01/rdf-schema#> PREFIX foaf: <http://xmlns.com/foaf/0.1/> SELECT ?author ?authorName WHERE { ?author a foaf:Person ; rdfs:label ?authorName . }" ;
+        VIVOpublicationList = uniqueURIGen.sparqlController.queryVIVO(query, "author", "authorName");
     }    
     
     public String checkVIVOforAuthor(String fullName)
     {
-        //Check the database
-        String query = "PREFIX rdfs:  <http://www.w3.org/2000/01/rdf-schema#> PREFIX foaf: <http://xmlns.com/foaf/0.1/> SELECT ?author WHERE { ?author a foaf:Person ; rdfs:label \"" + fullName + "\" . }" ;
-        return uniqueURIGen.sparqlController.checkForURI(query);        
+        String URI = null;
+        
+        Iterator iterator = VIVOpublicationList.entrySet().iterator();
+
+        while (iterator.hasNext())
+        {
+            Map.Entry pairs = (Map.Entry)iterator.next();
+            String s = (String) pairs.getValue();
+            if(s.equalsIgnoreCase(fullName))
+            {
+                URI = (String) pairs.getKey();
+            }
+        }                
+        
+        return URI;        
     }
     
     public String getAuthorURI(String authorName)

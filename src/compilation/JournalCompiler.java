@@ -6,6 +6,9 @@ package compilation;
 
 import entity.Journal;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import templates.UniqueURIGenerator;
 
 /**
@@ -15,19 +18,36 @@ import templates.UniqueURIGenerator;
 public class JournalCompiler
 {
     UniqueURIGenerator uniqueURIGen;
-    private ArrayList<Journal> uniqueJournals;    
+    private ArrayList<Journal> uniqueJournals;
+    Map<String, String> VIVOpublicationList = new HashMap<>();
     
     public JournalCompiler(UniqueURIGenerator uUg)
     {
         uniqueURIGen = uUg;
         uniqueJournals = new ArrayList<>();
+        
+        //Check the database
+        String query = "PREFIX rdfs:  <http://www.w3.org/2000/01/rdf-schema#> PREFIX bibo: <http://purl.org/ontology/bibo/> SELECT ?journal ?journalTitle WHERE { ?journal a bibo:Journal ; rdfs:label ?journalTitle . }" ;
+        VIVOpublicationList = uniqueURIGen.sparqlController.queryVIVO(query, "journal", "journalTitle");        
     }
     
     public String checkVIVOforTitle(String title)
     {
-        //Check the database
-        String query = "PREFIX rdfs:  <http://www.w3.org/2000/01/rdf-schema#> PREFIX bibo: <http://purl.org/ontology/bibo/> SELECT ?journal WHERE { ?journal a bibo:Journal ; rdfs:label \"" + title + "\" . }" ;
-        return uniqueURIGen.sparqlController.checkForURI(query);        
+        String URI = null;
+        
+        Iterator iterator = VIVOpublicationList.entrySet().iterator();
+
+        while (iterator.hasNext())
+        {
+            Map.Entry pairs = (Map.Entry)iterator.next();
+            String s = (String) pairs.getValue();
+            if(s.equalsIgnoreCase(title))
+            {
+                URI = (String) pairs.getKey();
+            }
+        }                
+        
+        return URI;        
     }
     
     public ArrayList<Journal> getAllJournals()

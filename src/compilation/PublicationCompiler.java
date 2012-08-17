@@ -48,12 +48,8 @@ public class PublicationCompiler
     }
     
     public String checkVIVOforTitle(String title)
-    {
-        //Check the database
-        //String query = "PREFIX core: <http://vivoweb.org/ontology/core#> SELECT ?publication WHERE { ?publication a core:InformationResource ; core:title \"" + title + "\" . }" ;
-        //return uniqueURIGen.sparqlController.checkForURI(query);        
-        
-        String VIVOtitle = null;
+    {        
+        String URI = null;
         
         Iterator iterator = VIVOpublicationList.entrySet().iterator();
 
@@ -63,11 +59,11 @@ public class PublicationCompiler
             String s = (String) pairs.getValue();
             if(s.equalsIgnoreCase(title))
             {
-                VIVOtitle = (String) pairs.getKey();
+                URI = (String) pairs.getKey();
             }
         }                
         
-        return VIVOtitle;
+        return URI;
     }
     
     public void addPublication(Publication p)
