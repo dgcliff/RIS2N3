@@ -24,47 +24,7 @@ public class SPARQLController
     {        
         store = s;
         mainModel = SDBFactory.connectNamedModel(store, "http://vitro.mannlib.cornell.edu/default/vitro-kb-2");        
-    }
-    
-    /*public String checkForURI(String queryString)
-    {        
-        Query query = QueryFactory.create(queryString);
-        QueryExecution qe = QueryExecutionFactory.create(query, mainModel);
-        
-        ResultSet results = null;
-        
-        try
-        {
-            results = qe.execSelect(); 
-        }
-        catch(Exception e)
-        {
-            System.out.println(e);
-        }
-        
-        String lineResult = null;
-        
-        while (results.hasNext())
-        {            
-            QuerySolution qs = results.next();
-            Iterator<?> varNames = qs.varNames();
-            while (varNames.hasNext())
-            {
-                String varName = (String) varNames.next();
-
-                try
-                {
-                    lineResult += qs.getLiteral(varName);
-                }
-                catch(Exception e)
-                {
-                    lineResult += qs.getResource(varName);
-                }
-            }
-        }
-        
-        return lineResult;
-    }*/
+    }        
     
     public Map<String, String> queryVIVO(String queryString, String URIsub, String valSub)
     {
