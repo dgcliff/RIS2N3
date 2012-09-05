@@ -179,16 +179,19 @@ public class N3Compiler
         ArrayList<Author> listOfAllAuthors = aC.getAllAuthors();
         
         for(Author au : listOfAllAuthors)
-        {
-            n3Compilation.add(au.getURI());
-            
+        {                        
             if(!au.getExistsInVIVO())
             {
+                n3Compilation.add(au.getURI());
+                
                 n3Compilation.add("\ta <http://www.w3.org/2002/07/owl#Thing> ;");
                 n3Compilation.add("\ta <http://xmlns.com/foaf/0.1/Person> ;");            
                 n3Compilation.add("\ta <http://xmlns.com/foaf/0.1/Agent> ;");
 
-                n3Compilation.add("\t<http://www.w3.org/2000/01/rdf-schema#label> \"" + au.getFullName() + "\" .");
+                n3Compilation.add("\t<http://xmlns.com/foaf/0.1/firstName> \"" + au.getFirstName() + "\" ;");
+                n3Compilation.add("\t<http://xmlns.com/foaf/0.1/lastName> \"" + au.getLastName() + "\" ;");
+                
+                n3Compilation.add("\t<http://www.w3.org/2000/01/rdf-schema#label> \"" + au.getFullName() + "\" .");                                
 
                 n3Compilation.add("");
             }
@@ -206,7 +209,7 @@ public class N3Compiler
             
             if(VIVOUri != null)
             {
-                au.setURI(VIVOUri);
+                au.setURI("<" + VIVOUri + ">");
                 au.setExistsInVIVO(true);
             }                            
         }        

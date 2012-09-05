@@ -47,8 +47,14 @@ public class SPARQLController
         while (results.hasNext())
         {            
             QuerySolution solution = results.next();
-            //titles.add((solution.getLiteral(subject)).getString());
-            titles.put((solution.getLiteral(URIsub)).getString(), (solution.getLiteral(valSub)).getString());
+            
+            String uri = "";
+            String value = "";
+
+            uri += solution.getResource(URIsub);
+            value += solution.getLiteral(valSub);
+
+            titles.put(uri, value);            
         }
         
         return titles;

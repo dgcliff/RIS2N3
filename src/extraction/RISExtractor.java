@@ -5,10 +5,14 @@ import database.SPARQLController;
 import entity.Publication;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.commons.io.comparator.LastModifiedFileComparator;
+import org.apache.commons.io.filefilter.FileFileFilter;
 import templates.*;
 
 /*
@@ -32,13 +36,15 @@ public class RISExtractor
         uniqueURIGen = new UniqueURIGenerator(sC);
         aC = new AuthorCompiler(uniqueURIGen);
         pC = new PublicationCompiler(uniqueURIGen);
+                        
+        File[] files = dir.listFiles((FileFilter) FileFileFilter.FILE);
+        Arrays.sort(files, LastModifiedFileComparator.LASTMODIFIED_COMPARATOR);
         
         if (dir.isDirectory())
         {
-            String[] children = dir.list();
-            for (int i = 0; i < children.length; i++)
+            for(File f : files)
             {
-                fileList.add(dir.getAbsolutePath() + "/" + children[i]);
+                fileList.add(f.getAbsolutePath());
             }
         }
     }
@@ -100,6 +106,7 @@ public class RISExtractor
                                 if (line.startsWith("T1") || line.startsWith("TI"))
                                 {
                                     title = (line.substring(line.indexOf("-") + 1, line.length())).trim();
+                                    title = title.replaceAll("\"", "");
                                 }
                                 
                                 if (line.startsWith("AU") || line.startsWith("A1") || line.startsWith("A2") || line.startsWith("A3") || line.startsWith("A4"))

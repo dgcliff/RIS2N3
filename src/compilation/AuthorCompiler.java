@@ -6,9 +6,6 @@ package compilation;
 
 import entity.Author;
 import entity.Publication;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -44,8 +41,12 @@ public class AuthorCompiler
         while (iterator.hasNext())
         {
             Map.Entry pairs = (Map.Entry)iterator.next();
-            String s = (String) pairs.getValue();
-            if(s.equalsIgnoreCase(fullName))
+            String vivoName = (String) pairs.getValue();
+            
+            Author tempVIVOauthor = new Author(vivoName, uniqueURIGen.generateTempURI());
+            Author tempAuthor = new Author(vivoName, uniqueURIGen.generateTempURI());
+            
+            if(tempAuthor.isTheSamePersonAs(tempVIVOauthor))
             {
                 URI = (String) pairs.getKey();
             }

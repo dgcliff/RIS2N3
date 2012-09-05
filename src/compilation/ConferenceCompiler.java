@@ -78,7 +78,7 @@ public class ConferenceCompiler
             if(VIVOUri != null)
             {
                 //create new journal object
-                con = new Conference(conferenceName, VIVOUri);
+                con = new Conference(conferenceName, "<" +  VIVOUri + ">");
                 con.setExistsInVIVO(true);
             }
             else

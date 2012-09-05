@@ -30,11 +30,11 @@ public class UniqueURIGenerator
     
     public String generateNewURI()
     {
-        return "<" + BASE_URI + "b" + getUniqueNumber() + ">";
+        return "<" + BASE_URI + "a" + getUniqueNumber() + ">";
     }
     
     public String generateTempURI()
     {
-        return "<" + BASE_URI + "b000>";
+        return "<" + BASE_URI + "a000>";
     }
 }

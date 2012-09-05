@@ -78,7 +78,7 @@ public class JournalCompiler
             if(VIVOUri != null)
             {
                 //create new journal object
-                jour = new Journal(journalName, VIVOUri);
+                jour = new Journal(journalName, "<" +  VIVOUri + ">");
                 jour.setExistsInVIVO(true);
             }
             else

@@ -45,7 +45,7 @@ public class ConferenceProceedings extends BaseTemplate
             {
                 addDate(line);
             }                 
-            else if (line.startsWith("JF") || line.startsWith("JO"))
+            else if (line.startsWith("JF") || line.startsWith("JO") || line.startsWith("T2"))
             {
                 if(!pub.getExistsInVIVO())
                 {                
