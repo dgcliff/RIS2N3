@@ -24,13 +24,15 @@ public class ris2n3
      */
     public static void main(String[] args) throws ParseException
     {
-        String username, password, jdbcURL;;
+        String username, password, jdbcURL, RISfolder, outputFile;
         
         Options options = new Options();
         
         options.addOption("username", true, "User name for JDBC connection");
         options.addOption("password", true, "Password for JDBC connection");
         options.addOption("jdbcURL", true, "JDBC URL for database connection");
+        options.addOption("RISfolder", true, "Folder where RIS files are contained");
+        options.addOption("outputFile", true, "Output file name");
         
         HelpFormatter helpFormatter = new HelpFormatter();
         
@@ -42,23 +44,25 @@ public class ris2n3
         username = cmd.getOptionValue("username");
         password = cmd.getOptionValue("password");
         jdbcURL = cmd.getOptionValue("jdbcURL");
+        RISfolder = cmd.getOptionValue("RISfolder");
+        outputFile = cmd.getOptionValue("outputFile");
         
-        if(username == null || password == null || jdbcURL == null)
+        if(username == null || password == null || jdbcURL == null || RISfolder == null || outputFile == null)
         {
             System.out.println("This program requries a user name, a password and a JDBC url to work.\n");
-            helpFormatter.printUsage(pw, 80, "RIS2N3", options);
+            helpFormatter.printUsage(pw, 120, "RIS2N3", options);
             System.exit(0);
         }
         
         SDBDatabaseConnection sdbC = new SDBDatabaseConnection(username, password, jdbcURL);
         SPARQLController sparqlC = new SPARQLController(sdbC.getStore());
         
-        File dir = new File(args[0]);
+        File dir = new File(RISfolder);
         
         RISExtractor risEx = new RISExtractor(dir, sparqlC);
                 
         risEx.extractAuthorNames();        
         
-        risEx.extractToN3(args[1]);
+        risEx.extractToN3(outputFile);
     }
 }
